@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Header } from "./styled";
 import { TabBar } from "components/TabBar";
+import { ContactListItem } from "components/ContactListItem";
 
 enum TABS {
   ALL = "all",
@@ -17,6 +18,12 @@ export const ContactListPage: React.FC = () => {
           { key: TABS.FAVORITED, label: "Favorited" }
         ]}
         activeTab={TABS.ALL}
+      />
+      <ContactListItem
+        name="Kaiden"
+        email="ksnz93@gmail.com"
+        phoneNumber="+85366666666"
+        isFavorited={false}
       />
     </Container>
   );
