@@ -1,12 +1,27 @@
 import React from "react";
 import { Container, Header } from "./styled";
 import { TabBar } from "components/TabBar";
-import { ContactListItem } from "components/ContactListItem";
+import { ContactList } from "components/ContactList";
 
 enum TABS {
   ALL = "all",
   FAVORITED = "favorited"
 }
+
+const getMockData = () => {
+  const result = [];
+  let i = 0;
+  while (i++ < 100) {
+    result.push({
+      id: String(i),
+      name: "Kaiden",
+      email: "ksnz93@gmail.com",
+      phoneNumber: "+853 63932808",
+      isFavorited: false
+    });
+  }
+  return result;
+};
 
 export const ContactListPage: React.FC = () => {
   return (
@@ -19,12 +34,7 @@ export const ContactListPage: React.FC = () => {
         ]}
         activeTab={TABS.ALL}
       />
-      <ContactListItem
-        name="Kaiden"
-        email="ksnz93@gmail.com"
-        phoneNumber="+85366666666"
-        isFavorited={false}
-      />
+      <ContactList data={getMockData()} />
     </Container>
   );
 };
