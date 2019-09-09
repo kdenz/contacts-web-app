@@ -6,6 +6,10 @@ export const Container = styled.div`
   border-radius: 10px;
   font-size: 1rem;
   padding: 1em;
+
+  & + & {
+    margin-top: 15px;
+  }
 `;
 
 export const InfoSection = styled.div`
