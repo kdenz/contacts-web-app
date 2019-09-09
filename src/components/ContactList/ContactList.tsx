@@ -5,7 +5,7 @@ import {
   ContactListItem
 } from "components/ContactListItem";
 
-interface ContactListProps {
+export interface ContactListProps {
   data: ContactListItemProps[];
 }
 export const ContactList: React.FC<ContactListProps> = ({ data }) => {

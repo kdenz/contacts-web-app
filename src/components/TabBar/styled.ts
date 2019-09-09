@@ -23,9 +23,17 @@ export const TabButton = styled.div<TabButtonProps>`
   }
 
   &:hover,
-  :focus {
+  &:focus {
     background: ${activeGradient};
     opacity: 0.5;
     color: #fff;
+    box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.5);
   }
+
+  &:active {
+    opacity: 1;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
+  }
+
+  ${props => props.isActive && `opacity: 1!important`}
 `;
