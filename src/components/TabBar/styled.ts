@@ -24,6 +24,7 @@ export const TabButton = styled.div<TabButtonProps>`
 
   &:hover,
   &:focus {
+    cursor: pointer;
     background: ${activeGradient};
     opacity: 0.5;
     color: #fff;

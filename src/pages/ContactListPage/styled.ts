@@ -11,3 +11,7 @@ export const Header = styled.div`
   padding: 1em 0;
   text-align: center;
 `;
+
+export const HeaderTitle = styled.span`
+  margin-right: 1rem;
+`;

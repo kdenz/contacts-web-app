@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Container, Header } from "./styled";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { Container, Header, HeaderTitle } from "./styled";
 import { TabBar } from "components/TabBar";
 import { ContactList, ContactListProps } from "components/ContactList";
 import { contactService } from "services/contactService";
+import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import { IconButton } from "components/IconButton";
 
 const TABS = {
   ALL: "all",
@@ -38,15 +40,37 @@ export const ContactListPage: React.FC = () => {
     }
   }, []);
 
-  const onTabClick = (clickedTab: string) => {
-    if (activeTab !== clickedTab) {
-      setActiveTab(clickedTab);
+  // Changes tab on tab click ONLY if it's different
+  const onTabClick = useCallback(
+    (clickedTab: string) => {
+      if (activeTab !== clickedTab) {
+        setActiveTab(clickedTab);
+      }
+    },
+    [activeTab]
+  );
+
+  // Returns filtered contacts
+  const filteredContacts = useMemo(() => {
+    if (activeTab === TABS.FAVORITED) {
+      return contacts.filter(contact => contact.isFavorited === true);
     }
-  };
+    return contacts;
+  }, [contacts, activeTab]);
+
+  const onAddButtonClick = useCallback(() => {}, []);
 
   return (
     <Container>
-      <Header>My Contacts</Header>
+      <Header>
+        <HeaderTitle>My Contacts</HeaderTitle>
+        <IconButton
+          icon={faPlusCircle}
+          size="1em"
+          color="#8e2de2"
+          onClick={onAddButtonClick}
+        />
+      </Header>
       <TabBar
         tabs={[
           { key: TABS.ALL, label: "All" },
@@ -58,7 +82,7 @@ export const ContactListPage: React.FC = () => {
         activeTab={activeTab}
         onTabClick={onTabClick}
       />
-      <ContactList data={contacts} />
+      <ContactList data={filteredContacts} />
     </Container>
   );
 };
