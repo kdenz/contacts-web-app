@@ -9,6 +9,7 @@ import {
   ErrorLabel
 } from "./styled";
 import useForm from "react-hook-form";
+import { contactService } from "services/contactService";
 
 const modalStyles = {
   content: {
@@ -25,32 +26,46 @@ const modalStyles = {
   }
 };
 
+export type Contact = {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+};
+
+export type ModalState = "edit" | "add" | "none";
 export interface AddEditContactModalProps {
-  isOpen: boolean;
   onCancel: () => void;
-  type: "edit" | "add";
-  currentName?: string;
-  currentEmail?: string;
-  currentPhone?: string;
+  state: ModalState;
+  onConfirm: (newContact: Contact) => void;
+  // This is useful for edit mode to modify existing contact
+  currentContact?: Contact;
 }
 export const AddEditContactModal: React.FC<AddEditContactModalProps> = ({
-  isOpen,
   onCancel,
-  type,
-  currentName,
-  currentEmail,
-  currentPhone
+  state,
+  onConfirm,
+  currentContact
 }) => {
   const { register, handleSubmit, errors } = useForm();
 
-  const onSubmit = useCallback(values => {
-    alert(values);
-  }, []);
+  const onSubmit = useCallback(
+    values => {
+      onConfirm({
+        // Injects existing or newly generated uuid value into the object for submit
+        id: currentContact ? currentContact.id : contactService.generateNewId(),
+        name: values.name,
+        email: values.email,
+        phone: values.phone
+      });
+    },
+    [currentContact, onConfirm]
+  );
 
-  const typeText = type === "add" ? "Add" : "Edit";
+  const typeText = state === "add" ? "Add" : "Edit";
   return (
     <Modal
-      isOpen={isOpen}
+      isOpen={state !== "none"}
       onRequestClose={onCancel}
       style={modalStyles}
       // Needed for react-modal to have fade-in and fade-out transitions
@@ -65,7 +80,7 @@ export const AddEditContactModal: React.FC<AddEditContactModalProps> = ({
           name="name"
           type="text"
           ref={register({ required: true })}
-          defaultValue={currentName}
+          defaultValue={currentContact && currentContact.name}
         />
 
         <FieldLabel>*Email Address:</FieldLabel>
@@ -74,7 +89,7 @@ export const AddEditContactModal: React.FC<AddEditContactModalProps> = ({
           name="email"
           type="email"
           ref={register({ required: true })}
-          defaultValue={currentEmail}
+          defaultValue={currentContact && currentContact.email}
         />
 
         <FieldLabel>Phone Number:</FieldLabel>
@@ -82,7 +97,7 @@ export const AddEditContactModal: React.FC<AddEditContactModalProps> = ({
           name="phone"
           type="tel"
           ref={register}
-          defaultValue={currentPhone}
+          defaultValue={currentContact && currentContact.phone}
         />
 
         <SubmitButton type="submit">{typeText} Contact</SubmitButton>
