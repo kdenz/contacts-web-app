@@ -14,7 +14,7 @@ import { Contact } from "components/ContactListItem";
 
 const modalStyles = {
   content: {
-    top: "30%",
+    top: "50%",
     left: "50%",
     right: "auto",
     bottom: "auto",
