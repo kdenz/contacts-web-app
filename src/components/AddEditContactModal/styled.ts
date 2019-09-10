@@ -22,6 +22,7 @@ export const Input = styled.input`
   display: block;
   margin: 10px 0 20px;
   font-size: 1rem;
+  padding: 0.2em;
 
   @media ${device.tablet} {
     font-size: 1.5rem;
