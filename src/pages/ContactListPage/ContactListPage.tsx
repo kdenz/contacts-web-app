@@ -5,6 +5,10 @@ import { ContactList, ContactListProps } from "components/ContactList";
 import { contactService } from "services/contactService";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { IconButton } from "components/IconButton";
+import {
+  AddEditContactModal,
+  ModalState
+} from "components/AddEditContactModal";
 
 const TABS = {
   ALL: "all",
@@ -13,6 +17,9 @@ const TABS = {
 
 export const ContactListPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState(TABS.ALL);
+  const [addEditContactModalState, setAddEditContactModalState] = useState<
+    ModalState
+  >("none");
   const [contacts, setContacts] = useState<ContactListProps["data"]>([]);
 
   // Initializes contacts var based on locally stored contacts
@@ -42,31 +49,48 @@ export const ContactListPage: React.FC = () => {
     return contacts;
   }, [contacts, activeTab]);
 
-  const onAddButtonClick = useCallback(() => {}, []);
+  const onAddButtonClick = useCallback(() => {
+    setAddEditContactModalState("add");
+  }, []);
+
+  const onAddContactModalClose = useCallback(() => {
+    setAddEditContactModalState("none");
+  }, []);
+
+  const onAddContactModalConfirm = useCallback(() => {
+    setAddEditContactModalState("none");
+  }, []);
 
   return (
-    <Container>
-      <Header>
-        <HeaderTitle>My Contacts</HeaderTitle>
-        <IconButton
-          icon={faPlusCircle}
-          size="1em"
-          color="#8e2de2"
-          onClick={onAddButtonClick}
+    <>
+      <Container>
+        <Header>
+          <HeaderTitle>My Contacts</HeaderTitle>
+          <IconButton
+            icon={faPlusCircle}
+            size="1em"
+            color="#8e2de2"
+            onClick={onAddButtonClick}
+          />
+        </Header>
+        <TabBar
+          tabs={[
+            { key: TABS.ALL, label: "All" },
+            {
+              key: TABS.FAVORITED,
+              label: "Favorited"
+            }
+          ]}
+          activeTab={activeTab}
+          onTabClick={onTabClick}
         />
-      </Header>
-      <TabBar
-        tabs={[
-          { key: TABS.ALL, label: "All" },
-          {
-            key: TABS.FAVORITED,
-            label: "Favorited"
-          }
-        ]}
-        activeTab={activeTab}
-        onTabClick={onTabClick}
+        <ContactList data={filteredContacts} />
+      </Container>
+      <AddEditContactModal
+        state={addEditContactModalState}
+        onCancel={onAddContactModalClose}
+        onConfirm={onAddContactModalConfirm}
       />
-      <ContactList data={filteredContacts} />
-    </Container>
+    </>
   );
 };

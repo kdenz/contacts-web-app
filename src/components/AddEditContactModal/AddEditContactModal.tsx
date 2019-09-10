@@ -53,13 +53,16 @@ export const AddEditContactModal: React.FC<AddEditContactModalProps> = ({
     values => {
       onConfirm({
         // Injects existing or newly generated uuid value into the object for submit
-        id: currentContact ? currentContact.id : contactService.generateNewId(),
+        id:
+          state === "edit" && currentContact
+            ? currentContact.id
+            : contactService.generateNewId(),
         name: values.name,
         email: values.email,
         phone: values.phone
       });
     },
-    [currentContact, onConfirm]
+    [currentContact, onConfirm, state]
   );
 
   const typeText = state === "add" ? "Add" : "Edit";
