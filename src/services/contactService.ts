@@ -1,8 +1,8 @@
-import { ContactListProps } from "components/ContactList";
+import { Contact } from "components/ContactListItem";
 
 const CONTACTS_KEY = "contacts";
 
-const loadContacts = (): ContactListProps["data"] => {
+const loadContacts = (): Contact[] => {
   try {
     const storedContacts = localStorage.getItem(CONTACTS_KEY);
     return storedContacts ? JSON.parse(storedContacts) : [];
@@ -13,8 +13,22 @@ const loadContacts = (): ContactListProps["data"] => {
   }
 };
 
-const storeContacts = (contacts: ContactListProps["data"]) => {
-  localStorage.setItem(CONTACTS_KEY, JSON.stringify(contacts));
+const storeContact = (updatedContact: Contact) => {
+  const currentContacts = loadContacts();
+  // Tries to find existing contact
+  const existingContactIndex = currentContacts.findIndex(
+    item => item.id === updatedContact.id
+  );
+  // If found, replace it with the new Contact object
+  if (existingContactIndex > -1) {
+    currentContacts[existingContactIndex] = updatedContact;
+  } else {
+    // Not found, so it's a new Contact, just add to the beginning of the array
+    currentContacts.unshift(updatedContact);
+  }
+
+  localStorage.setItem(CONTACTS_KEY, JSON.stringify(currentContacts));
+  return currentContacts;
 };
 
 // Generates new id using https://stackoverflow.com/a/44078785/3637651
@@ -29,6 +43,6 @@ const generateNewId = () => {
 
 export const contactService = {
   loadContacts,
-  storeContacts,
+  storeContact,
   generateNewId
 };

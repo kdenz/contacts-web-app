@@ -9,6 +9,7 @@ import {
   AddEditContactModal,
   ModalState
 } from "components/AddEditContactModal";
+import { Contact } from "components/ContactListItem";
 
 const TABS = {
   ALL: "all",
@@ -20,6 +21,7 @@ export const ContactListPage: React.FC = () => {
   const [addEditContactModalState, setAddEditContactModalState] = useState<
     ModalState
   >("none");
+  const [contactToEdit, setContactToEdit] = useState<Contact>();
   const [contacts, setContacts] = useState<ContactListProps["data"]>([]);
 
   // Initializes contacts var based on locally stored contacts
@@ -50,15 +52,38 @@ export const ContactListPage: React.FC = () => {
   }, [contacts, activeTab]);
 
   const onAddButtonClick = useCallback(() => {
+    setContactToEdit(undefined);
     setAddEditContactModalState("add");
   }, []);
 
-  const onAddContactModalClose = useCallback(() => {
+  const onEditButtonClick = useCallback((contactToEdit: Contact) => {
+    setContactToEdit(contactToEdit);
+    setAddEditContactModalState("edit");
+  }, []);
+
+  const onAddEditContactModalClose = useCallback(() => {
     setAddEditContactModalState("none");
   }, []);
 
-  const onAddContactModalConfirm = useCallback(() => {
-    setAddEditContactModalState("none");
+  const onAddEditContactModalConfirm = useCallback(
+    (updatedContact: Contact) => {
+      setAddEditContactModalState("none");
+      // stores the updated contact
+      const updatedContacts = contactService.storeContact(updatedContact);
+      // updates UI display
+      setContacts(updatedContacts);
+    },
+    []
+  );
+
+  const onFavoriteToggle = useCallback((contactForToggle: Contact) => {
+    // stores the isFavorited toggled contact
+    const updatedContacts = contactService.storeContact({
+      ...contactForToggle,
+      isFavorited: !contactForToggle.isFavorited
+    });
+    // updates UI display
+    setContacts(updatedContacts);
   }, []);
 
   return (
@@ -84,12 +109,17 @@ export const ContactListPage: React.FC = () => {
           activeTab={activeTab}
           onTabClick={onTabClick}
         />
-        <ContactList data={filteredContacts} />
+        <ContactList
+          data={filteredContacts}
+          onEditClick={onEditButtonClick}
+          onFavoriteToggle={onFavoriteToggle}
+        />
       </Container>
       <AddEditContactModal
         state={addEditContactModalState}
-        onCancel={onAddContactModalClose}
-        onConfirm={onAddContactModalConfirm}
+        onCancel={onAddEditContactModalClose}
+        onConfirm={onAddEditContactModalConfirm}
+        currentContact={contactToEdit}
       />
     </>
   );

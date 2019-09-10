@@ -10,6 +10,7 @@ import {
 } from "./styled";
 import useForm from "react-hook-form";
 import { contactService } from "services/contactService";
+import { Contact } from "components/ContactListItem";
 
 const modalStyles = {
   content: {
@@ -24,13 +25,6 @@ const modalStyles = {
   overlay: {
     backgroundColor: "rgba(0, 0, 0, 0.75)"
   }
-};
-
-export type Contact = {
-  id: string;
-  name: string;
-  email: string;
-  phone?: string;
 };
 
 export type ModalState = "edit" | "add" | "none";
@@ -59,7 +53,8 @@ export const AddEditContactModal: React.FC<AddEditContactModalProps> = ({
             : contactService.generateNewId(),
         name: values.name,
         email: values.email,
-        phone: values.phone
+        phoneNumber: values.phoneNumber,
+        isFavorited: currentContact ? currentContact.isFavorited : false
       });
     },
     [currentContact, onConfirm, state]
@@ -97,10 +92,10 @@ export const AddEditContactModal: React.FC<AddEditContactModalProps> = ({
 
         <FieldLabel>Phone Number:</FieldLabel>
         <Input
-          name="phone"
+          name="phoneNumber"
           type="tel"
           ref={register}
-          defaultValue={currentContact && currentContact.phone}
+          defaultValue={currentContact && currentContact.phoneNumber}
         />
 
         <SubmitButton type="submit">{typeText} Contact</SubmitButton>
