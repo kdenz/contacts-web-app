@@ -11,22 +11,6 @@ const TABS = {
   FAVORITED: "favorited"
 };
 
-// For getting mock contacts data
-// const getMockData = () => {
-//   const result = [];
-//   let i = 0;
-//   while (i++ < 100) {
-//     result.push({
-//       id: String(i),
-//       name: "Kaiden",
-//       email: "ksnz93@gmail.com",
-//       phoneNumber: "+853 63932808",
-//       isFavorited: false
-//     });
-//   }
-//   return result;
-// };
-
 export const ContactListPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState(TABS.ALL);
   const [contacts, setContacts] = useState<ContactListProps["data"]>([]);
